@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transaksi</title>
+
+    <!-- Untuk styling tampilan Web  -->
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 20%;
+        margin-bottom: 20px;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+        color: red;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid purple;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+      }
+
+      label[for="kodeInput"] {
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+      }
+
+      label[for="quantityInput"] {
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+      }
+
+      button {
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        border-radius: 10px;
+        background-color: green;
+        border-left: 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        padding: 10px 20px;
+        margin-left: 200px;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 15%;
+        border: 2px solid green;
+        border-radius: 3px;
+        padding: 5px;
+        font-size: 16px;
+        display: inline-block;
+      }
+
+      form > label {
+        display: block;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+
+  <!-- Tampilan Untuk Mengatur Sebuah HTML -->
+  <body>
+    <h1
+      style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+    ></h1>
+
+    <h2
+      style="
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
+          sans-serif;
+      "
+    >
+      Data Barang
+    </h2>
+    <table id="barangTable">
+      <tr>
+        <th>Kode</th>
+        <th>Nama Barang</th>
+        <th>Harga</th>
+      </tr>
+    </table>
+
+    <h2
+      style="
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
+          sans-serif;
+      "
+    >
+      Inputan User
+    </h2>
+    <form onsubmit="tambahTransaksi(event)">
+      <label for="kodeInput">Kode Barang :</label>
+      <input type="text" id="kodeInput" required />
+      <br />
+      <br />
+      <label for="quantityInput">Jumlah : </label>
+      <input type="number" id="quantityInput" min="0" required />
+      <br />
+      <br />
+      <button type="submit">Submit</button>
+    </form>
+
+    <!-- Tampilan Untuk Javascipt  -->
+    <script>
+      const barangData = [
+        { kode: "001", nama: "A", harga: 10000 },
+        { kode: "002", nama: "B", harga: 20000 },
+        { kode: "003", nama: "C", harga: 30000 },
+      ];
+
+      function tampilkanDataBarang() {
+        const barangTable = document.getElementById("barangTable");
+        barangData.forEach((barang, index) => {
+          const row = barangTable.insertRow(index + 1);
+          const kodeCell = row.insertCell(0);
+          const namaCell = row.insertCell(1);
+          const hargaCell = row.insertCell(2);
+
+          kodeCell.textContent = barang.kode;
+          namaCell.textContent = barang.nama;
+          hargaCell.textContent = barang.harga;
+        });
+      }
+
+      function tambahTransaksi(event) {
+        event.preventDefault();
+
+        const kodeInput = document.getElementById("kodeInput");
+        const quantityInput = document.getElementById("quantityInput");
+
+        const selectedBarang = barangData.find(
+          (barang) => barang.kode === kodeInput.value
+        );
+
+        if (!selectedBarang) {
+          alert("Kode barang tidak valid");
+          return;
+        }
+
+        const jumlah = parseInt(quantityInput.value);
+        const totalHarga = selectedBarang.harga * jumlah;
+
+        const bayar = window.prompt(
+          "Total yang harus dibayar : " +
+            totalHarga +
+            "\n\n" +
+            "Masukkan jumlah uang yang akan dibayarkan :"
+        );
+
+        if (bayar === null || bayar === "") {
+          alert("Pembayaran dibatalkan");
+          return;
+        }
+
+        const jumlahBayar = parseFloat(bayar);
+
+        if (isNaN(jumlahBayar) || jumlahBayar < totalHarga) {
+          alert("Pembayaran gagal atau kurang dari total yang harus dibayar");
+          return;
+        }
+
+        const kembalian = jumlahBayar - totalHarga;
+
+        alert(
+          "Sukses\n\n" +
+            "Total Harga : " +
+            totalHarga +
+            "\n" +
+            "\n" +
+            "Jumlah Uang : " +
+            jumlahBayar +
+            "\n" +
+            "\n" +
+            "Kembalian : " +
+            kembalian
+        );
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        tampilkanDataBarang();
+      });
+    </script>
+  </body>
+</html>
